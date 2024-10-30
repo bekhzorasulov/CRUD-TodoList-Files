@@ -66,7 +66,7 @@ setInterval(getTime, 1000);
 // show todos
 function showTodos() {
   const todos = JSON.parse(localStorage.getItem("list"));
-
+  listGroupTodo.innerHTML = "";
   todos.forEach((item, i) => {
     //     listGroupTodo.removeChild;
     const clone = template.content.cloneNode("true");
@@ -76,15 +76,16 @@ function showTodos() {
     const img1 = clone.querySelector("#edit");
     const img2 = clone.querySelector("#deletebtn");
     li.setAttribute("ondblclick", `setCompleted(${i})`);
-    //     if (`${item.completed == true}`) {
-    //       li.classList.add("completed");
-    //     } else if (`${item.completed == false}`) {
-    //       li.classList.remove("completed");
-    //     }
+    if (item.completed) {
+      li.classList.add("completed");
+    } else {
+      li.classList.remove("completed");
+    }
     img1.setAttribute("onclick", `editTodo(${i})`);
     img2.setAttribute("onclick", `deleteTodo(${i})`);
     p.textContent = item.text;
     timeSpan.textContent = item.time;
+
     listGroupTodo.appendChild(clone);
   });
 }
@@ -123,6 +124,7 @@ function deleteTodo(id) {
 
 // setCompleted
 function setCompleted(id) {
+  console.log(1);
   const copmleteTodos = todos.map((item, i) => {
     if (id == i) {
       return { ...item, completed: item.completed == true ? false : true };
@@ -139,7 +141,6 @@ function setCompleted(id) {
 formEdit.addEventListener("submit", (e) => {
   e.preventDefault();
   const todoText = formEdit["input-edit"].value.trim();
-  formEdit.reset();
   if (todoText.length) {
     todos.splice(editItemId, 1, {
       text: todoText,
@@ -149,9 +150,11 @@ formEdit.addEventListener("submit", (e) => {
     setTodos();
     showTodos();
     close();
+    formEdit.reset();
   } else {
     showMessage("message-edit", "Please, enter your todo...");
   }
+  console.log("hee");
 });
 
 // editTodo
@@ -176,17 +179,3 @@ function close() {
   modal.classList.add("hidden");
   overlay.classList.add("hidden");
 }
-//     listGroupTodo.innerHTML += `
-//                       <li class="list-group-item d-flex justify-content-between">
-//               hello world
-//               <div class="todos-icons">
-//                 <span class="opacity-50 me-2">29.10.2024</span>
-//                 <img src="./img/edit.svg" alt="edit icon" width="25" height="25" />
-//                 <img
-//                   src="./img/delete.svg"
-//                   alt="edit icon"
-//                   width="25"
-//                   height="25"
-//                 />
-//               </div>
-//             </li>`;
